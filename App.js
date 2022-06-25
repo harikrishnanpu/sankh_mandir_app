@@ -1,20 +1,21 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { AppRegistry, View } from 'react-native';
+import Routes from './Routes';
+import 'react-native-gesture-handler';
+import OneSignal from 'react-native-onesignal';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+OneSignal.setLogLevel(6, 0);
+OneSignal.setAppId('38dfac23-7150-475b-898b-f284b7b965dc');
+
+
+class App extends Component {
+   render() {
+      return (
+         <Routes />
+      )
+   }
 }
+export default App
+AppRegistry.registerComponent('App', () => App)
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
