@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TextInput, Button, ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TextInput, Button, ActivityIndicator, Alert, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Actions } from 'react-native-router-flux'
 import { getApp, initializeApp } from 'firebase/app';
@@ -7,16 +7,17 @@ import { getAuth, onAuthStateChanged, PhoneAuthProvider, signInWithCredential, u
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, getDocs, getDoc } from "firebase/firestore";
 import DropDownPicker from 'react-native-dropdown-picker';
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons'
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCAWxpWL9iTD5QVwIaY-4V3vo7AUhreueo",
-  authDomain: "otp-generator-and-users-db.firebaseapp.com",
-  projectId: "otp-generator-and-users-db",
-  storageBucket: "otp-generator-and-users-db.appspot.com",
-  messagingSenderId: "76579294228",
-  appId: "1:76579294228:web:f32246444640487e756b01",
-  measurementId: "G-27YFRDLRC5"
+  apiKey: "AIzaSyDz86Mb6rn8JSesxNaJolGU_el67enmUSE",
+  authDomain: "sankh-mandir-app.firebaseapp.com",
+  projectId: "sankh-mandir-app",
+  storageBucket: "sankh-mandir-app.appspot.com",
+  messagingSenderId: "976054396303",
+  appId: "1:976054396303:web:806fe9250827743bab97fa",
+  measurementId: "G-XWPWXQD0ZL"
 };
 
 try {
@@ -54,9 +55,8 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [blood, setBlood] = useState(null);
   const [place, setPlace] = useState('');
-  const [status, setStatus] = useState('Active')
+  const [status, setStatus] = useState('Active');
   const [verificationId, setVerificationId] = useState('');
-  const attemptInvisibleVerification = true;
   const [Otp1, setOtp1] = useState('');
   const [Otp2, setOtp2] = useState('');
   const [Otp3, setOtp3] = useState('');
@@ -87,7 +87,7 @@ const LoginScreen = () => {
       setVerificationId(verificationId);
       setOtpScreen(true)
     } catch (err) {
-      alert("ERROR OCUURED", err.message)
+      Alert.alert("Error Occured", err.message)
     }
   }
 
@@ -130,7 +130,8 @@ const LoginScreen = () => {
           phone: auth.currentUser.phoneNumber,
           blood: blood,
           place: place,
-          status: status
+          status: status,
+          isFirst: true
         });
       } else {
         await setDoc(doc(db, "Users", auth.currentUser.uid), {
@@ -138,13 +139,14 @@ const LoginScreen = () => {
           phone: auth.currentUser.phoneNumber,
           blood: blood,
           place: place,
-          status: status
+          status: status,
+          isFirst: true
         });
       }
       Actions.home()
       setLoading(false)
     } catch (e) {
-      Alert.alert("ERROR OCUURED", e.messsage)
+      Alert.alert(e.messsage)
       setLoading(false)
     }
   }
@@ -155,28 +157,29 @@ const LoginScreen = () => {
   return (
 
 
-    <View>
+    <ScrollView>
 
 
 
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={app.options}
+        title="Sankh Mandir App Security"
+        accessibilityHint='Proove You Are A Human'
       />
 
-      {loading && <ActivityIndicator size={80} style={styles.loader} color="orange" />}
+      {loading && <ActivityIndicator size={80} style={styles.loader} color="#fc9003" />}
 
 
 
-      <View style={styles.mainContainer}>
+      <KeyboardAvoidingView style={styles.mainContainer}>
 
 
-        <Text style={styles.title}>SANKHA MANDIR</Text>
+        <Text style={styles.title}>SANKHA MANDIR APP</Text>
         {ConfirmIdentity ? undefined : <Text style={styles.label}>Thiruvanvandoor</Text>}
 
         {ConfirmIdentity && <View style={{ alignItems: 'center' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 18, margin: 5, marginBottom: 5, textAlign: 'center' }}>Your Personal Details Informations</Text>
-
+          <Text style={styles.label}>Personal Details:</Text>
           <Text style={styles.label}>Name: {auth.currentUser?.displayName ? auth.currentUser.displayName : undefined}</Text>
           <Text style={styles.label}>Phone Number: {auth.currentUser?.phoneNumber ? auth.currentUser.phoneNumber : undefined}</Text>
         </View>}
@@ -184,9 +187,9 @@ const LoginScreen = () => {
 
 
         <KeyboardAvoidingView style={styles.container}>
-          {ConfirmIdentity && <Text style={{ margin: 2, color: 'white', textAlign: 'center' }}>We Need More Information To Activate Your Sankha Mandir Account</Text>}
+          {OtpScreen && ConfirmIdentity ? undefined : OtpScreen ? <View style={styles.backButton} onPress={() => setOtpScreen(false)} ><MaterialsIcon onPress={() => setOtpScreen(false)} style={{ textAlign: 'center', textAlignVertical: 'center', color: 'white', alignItems: 'center', fontWeight: 'bold' }} name="arrow-back" size={22} /><Text onPress={() => setOtpScreen(false)} style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', textAlignVertical: 'center', fontSize: 16 }}>Back</Text></View> : undefined}
+          {ConfirmIdentity && <Text style={{ margin: 1, color: 'white', textAlign: 'center', fontWeight: 'bold' }}>We Need More Information To Activate Your Sankha Mandir Account</Text>}
           {OtpScreen && ConfirmIdentity ? undefined : <Image style={styles.image} source={require('../assets/logo1`.png')} />}
-
 
           {message ? (
             <TouchableOpacity
@@ -194,20 +197,22 @@ const LoginScreen = () => {
               onPress={() => showMessage(undefined)}>
               <Text
                 style={{
-                  margin: 2,
-                  fontSize: 16,
-                  color: message.color ? message.color : "grey"
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  color: "white",
+                  textAlign: 'center',
+                  textAlignVertical: 'center'
                 }}>
-                {message.text}
+                {message.text} {message.color == "green" && <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}><MaterialsIcon color="#7cf79d" name="verified" /></Text>}
               </Text>
             </TouchableOpacity>) : (undefined)}
 
 
-          <View>
+          <View style={{ width: '95%' }}>
             {OtpScreen ? (undefined) : <Text style={{
               margin: 5,
-              fontSize: 16,
-              marginRight: '40%'
+              fontSize: 14,
+              fontWeight: 'bold'
             }}>Enter Your Full Name</Text>}
 
 
@@ -215,14 +220,15 @@ const LoginScreen = () => {
               style={styles.input}
               placeholder="Full Name"
               autoFocus
+              autoComplete='name-given'
               value={Username}
               onChangeText={name => setName(name)}
             />}
 
             {OtpScreen ? (undefined) : <Text style={{
               margin: 5,
-              fontSize: 16,
-              marginRight: '40%'
+              fontSize: 14,
+              fontWeight: 'bold'
             }}>Enter Your phone number</Text>}
 
 
@@ -230,7 +236,8 @@ const LoginScreen = () => {
               style={styles.input}
               placeholder="Enter Your Number"
               maxLength={10}
-              autoCompleteType="tel"
+              autoComplete="tel-device"
+              dataDetectorTypes="phoneNumber"
               keyboardType="phone-pad"
               textContentType="telephoneNumber"
               onChangeText={phoneNumber => setPhoneNumber(phoneNumber)}
@@ -239,7 +246,7 @@ const LoginScreen = () => {
             {OtpScreen ? (undefined) : <Button
               title="Send Verification Code"
               disabled={!phoneNumber || phoneNumber.length !== 10 || !Username}
-              color="orange"
+              color="#fc9003"
               onPress={verifyPhoneNumber}
             />}
             <Text style={{ marginBottom: 8 }}></Text>
@@ -247,7 +254,8 @@ const LoginScreen = () => {
 
 
           {OtpScreen && !ConfirmIdentity ? <View>
-            <Text style={styles.label}>Enter Verification Code </Text>
+            <Text style={{ margin: 5, textAlign: 'center', fontSize: 11, fontWeight: 'bold' }}>OTP Sent Successfully To Your Number: <Text style={{ color: 'orange' }}>{phoneNumber}</Text></Text>
+            <Text style={{ margin: 5, textAlign: 'center', fontSize: 14, fontWeight: 'bold' }}>Enter Verification Code ( OTP )</Text>
 
             <View style={{
               alignSelf: "flex-start", flexDirection: "row",
@@ -274,6 +282,7 @@ const LoginScreen = () => {
                   setOtp2(text)
                   text ? OtpRef3.current.focus() : OtpRef1.current.focus()
                 }}
+
                 maxLength={1}
                 keyboardType="number-pad"
                 ref={OtpRef2}
@@ -334,79 +343,91 @@ const LoginScreen = () => {
 
             <Button
               title="Confirm Verification Code"
-              color="orange"
+              color="#fc9003"
               disabled={!verificationId}
               onPress={verifyConfirmation}
             />
 
           </View> : undefined}
 
-          <View>
+          <SafeAreaView>
 
             {OtpScreen && ConfirmIdentity ?
               <KeyboardAvoidingView style={{ width: '98%', justifyContent: 'center' }}>
-                <Text style={{ fontWeight: '600', fontSize: 16, margin: 5, marginBottom: 5, textAlign: 'center' }}>Enter Your Blood Group For Rss Tvndr Blood Donation Prg <Fontisto size={20} style={{ color: 'red' }} name="blood-drop" /> </Text>
-                <View style={{ width: '90%', margin: 5 }}>
-                  <DropDownPicker
-                    containerStyle={{ marginBottom: 15, zIndex: 10 }}
-                    placeholder="Choose Your Blood Group"
-                    placeholderStyle={{
-                      fontWeight: "400"
-                    }}
-                    dropDownContainerStyle={{ height: 500, width: 100 }}
-                    open={DropDownOpen}
-                    value={blood}
-                    listMode="MODAL"
-                    modalProps={{
-                      animationType: "slide",
-                      presentationStyle: 'formSheet'
-                    }}
-                    modalContentContainerStyle={{
-                      backgroundColor: "white",
-                    }}
-                    modalTitleStyle={{
-                      fontWeight: "bold",
-                      color: 'red'
-                    }}
-                    listParentContainerStyle={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 'auto'
-                    }}
-                    listParentLabelStyle={{
-                      fontWeight: "600",
-                      borderRadius: 10,
-                      padding: 10,
-                      margin: 5,
-                      color: 'black'
 
-                    }}
-                    itemSeparatorStyle={{
-                      margin: 2
-                    }}
-                    tickIconStyle={{
-                      borderColor: 'black'
-                    }}
-                    itemSeparator={true}
-                    modalTitle="Select Your Blood Group"
-                    closeOnBackPressed={true}
-                    items={[
-                      { label: 'A+ve', value: 'A+ve' },
-                      { label: 'A-ve', value: 'A-ve' },
-                      { label: 'B+ve', value: 'B+ve' },
-                      { label: 'B-ve', value: 'B-ve' },
-                      { label: 'O+ve', value: 'O+ve' },
-                      { label: 'O-ve', value: 'O-ve' },
-                      { label: 'AB+ve', value: 'AB+ve' },
-                      { label: 'AB-ve', value: 'AB-ve' },
-                      { label: `Disclaimer: Verify Your Blood Group Correctly`, disabled: true }
-                    ]}
-                    setOpen={setDropOpen}
-                    setValue={setBlood}
-                  />
+                <View style={{ backgroundColor: '#8c8c8b', width: '100%', padding: 4, borderRadius: 10, margin: 3 }}>
+                  <Text style={{ fontWeight: '600', fontSize: 14, margin: 5, marginBottom: 5, textAlign: 'center' }}>Enter Your Blood Group For Rss Tvndr Blood Donation Prg <Fontisto size={20} style={{ color: 'red' }} name="blood-drop" /> </Text>
+                  <View style={{ width: '99%', margin: 5 }}>
+                    <DropDownPicker
+                      containerStyle={{ marginBottom: 15, zIndex: 10 }}
+                      placeholder="Choose Your Blood Group"
+                      placeholderStyle={{
+                        fontWeight: "400"
+                      }}
+                      dropDownContainerStyle={{ height: 500, width: 100 }}
+                      open={DropDownOpen}
+                      value={blood}
+                      listMode="MODAL"
+                      modalProps={{
+                        animationType: "slide",
+                        presentationStyle: 'formSheet'
+                      }}
+                      modalContentContainerStyle={{
+                        backgroundColor: "white",
+                      }}
+                      modalTitleStyle={{
+                        fontWeight: "bold",
+                        color: 'red'
+                      }}
+                      listParentContainerStyle={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: 'auto'
+                      }}
+                      listParentLabelStyle={{
+                        fontWeight: "600",
+                        borderRadius: 10,
+                        padding: 10,
+                        margin: 5,
+                        color: 'black'
+
+                      }}
+                      itemSeparatorStyle={{
+                        margin: 2
+                      }}
+                      tickIconStyle={{
+                        borderColor: 'black'
+                      }}
+                      disabledItemLabelStyle={{
+                        color: 'grey',
+                        fontWeight: '400',
+                        fontSize: 12,
+                        textAlign: 'center'
+                      }}
+                      disabledItemContainerStyle={{
+                        height: 'auto'
+                      }}
+                      itemSeparator={true}
+                      modalTitle="Select Your Blood Group"
+                      closeOnBackPressed={true}
+                      items={[
+                        { label: 'A+ve', value: 'A+ve' },
+                        { label: 'A-ve', value: 'A-ve' },
+                        { label: 'B+ve', value: 'B+ve' },
+                        { label: 'B-ve', value: 'B-ve' },
+                        { label: 'O+ve', value: 'O+ve' },
+                        { label: 'O-ve', value: 'O-ve' },
+                        { label: 'AB+ve', value: 'AB+ve' },
+                        { label: 'AB-ve', value: 'AB-ve' },
+                        { label: `Disclaimer: Verify Your Blood Group Correctly. If Any Error Occured Sankh Mandir App is Not Responsible For The Error`, disabled: true }
+                      ]}
+                      setOpen={setDropOpen}
+                      setValue={setBlood}
+                    />
+                  </View>
                 </View>
 
-                <Text style={{ fontWeight: '600', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Your Place:</Text>
+                <Text style={{ fontWeight: '600', fontSize: 14, margin: 8, marginBottom: 5 }}>Enter Your Place:</Text>
                 <TextInput
                   style={styles.input1}
                   placeholder="Eg: Thiruvanvandoor"
@@ -417,7 +438,7 @@ const LoginScreen = () => {
                 <Button
                   disabled={!blood || !place}
                   title="Activate Account"
-                  color="orange"
+                  color="#fc9003"
                   onPress={verifyBloodGroup}
                 />
 
@@ -425,7 +446,7 @@ const LoginScreen = () => {
               </KeyboardAvoidingView> : undefined
             }
 
-          </View>
+          </SafeAreaView>
 
 
 
@@ -435,16 +456,16 @@ const LoginScreen = () => {
           <Text onPress={changeLang} style={styles.footer}>Change Language ( Malayalam )</Text>
           <Text style={styles.footer}>©2022 SANKHA MANDIR - THIRUVANVANDOOR </Text>
           <Text style={styles.footer1}> ( All Rights Reserved ) </Text>
-          {attemptInvisibleVerification && <FirebaseRecaptchaBanner style={styles.recaptcha} textStyle={{ textAlign: 'center', color: 'grey' }} />}
+          <FirebaseRecaptchaBanner style={styles.recaptcha} textStyle={{ textAlign: 'center', color: 'black' }} />
         </View>
-      </View>
+      </KeyboardAvoidingView>
 
 
 
 
 
 
-    </View>
+    </ScrollView>
   )
 }
 
@@ -473,20 +494,21 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 22,
     marginTop: 29,
-    color: 'orange',
+    color: '#fc9003',
     opacity: 1
   },
   label: {
-    margin: 4,
-    fontSize: 16,
-    textAlign: 'center'
+    margin: 2,
+    fontSize: 14,
+    textAlign: 'center',
+    fontWeight: '500'
   },
   image: {
     width: 200,
     height: 100,
-    margin: 10,
+    margin: 12,
     borderRadius: 10,
     opacity: .8,
   },
@@ -510,7 +532,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 0,
     color: 'black',
-    margin: 5,
+    margin: 7,
   },
   Otpinput: {
     height: 40,
@@ -526,12 +548,11 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: "orange",
+    backgroundColor: "#fc9003",
     marginTop: 30,
     padding: 10,
     width: '60%',
-    borderRadius: 5,
-    backgroundColor: 'orange'
+    borderRadius: 5
   },
   footer: {
     fontSize: 14,
@@ -570,9 +591,16 @@ const styles = StyleSheet.create({
   recaptcha: {
     textAlign: 'center',
     justifyContent: 'center',
-    margin: 5,
+    marginTop: 10
+  },
+  backButton: {
+    left: 6,
+    top: 8,
     position: 'absolute',
-    top: '100%',
-
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    flexDirection: 'row',
+    margin: 5
   }
 })

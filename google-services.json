@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "976054396303",
+    "project_id": "sankh-mandir-app",
+    "storage_bucket": "sankh-mandir-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:976054396303:android:2bde2e6ce0c66347ab97fa",
+        "android_client_info": {
+          "package_name": "com.hari.sankh_mandir"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "976054396303-ecbr3b0tgi76c5buo8cjig2im6t1tgs5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhzr2CvqzjxrnZsme66cCIbd15aNPx0Rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "976054396303-ecbr3b0tgi76c5buo8cjig2im6t1tgs5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

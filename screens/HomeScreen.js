@@ -6,14 +6,111 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import MarqueeText from 'react-native-marquee';
 import { auth, db } from '../firebase'
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import {
+  TourGuideProvider, // Main provider
+  TourGuideZone, // Main wrapper of highlight component
+  TourGuideZoneByPosition, // Component to use mask on overlay (ie, position absolute)
+  useTourGuideController, // hook to start, etc.
+} from 'rn-tourguide'
+
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+
+async function sendWelcomePushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'Namaste, Welcome To Sankh Mandir App',
+    body: 'You Are Now A Part Of Rss Thiruvanvandoor Rudram Blood Donation Programm 👍',
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  }).then(async () => {
+    await updateDoc(doc(db, "Users", auth.currentUser.uid), {
+      isFirst: false
+    })
+    console.log("Message Sent Successfully");
+  })
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    if (token) {
+      await updateDoc(doc(db, "Users", auth.currentUser?.uid), {
+        expoToken: token
+      })
+    }
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#ffaa00',
+    });
+  }
+
+  return token;
+}
 
 
 const HomeScreen = () => {
+  return (
+    <TourGuideProvider preventOutsideInteraction >
+      <HomeScreenComPonent />
+    </TourGuideProvider>
+  )
+}
+
+
+const HomeScreenComPonent = () => {
 
   const [UserName, setUserName] = useState('Loading..');
   const [status, setStatus] = useState('Loading..');
+  const {
+    start, // a function to start the tourguide
+    stop, // a function  to stopping it
+    eventEmitter, // an object for listening some events
+  } = useTourGuideController();
+
+  useEffect(() => {
+    (() => registerForPushNotificationsAsync())();
+  }, []);
+
 
   useEffect(() => {
     async function getSnap() {
@@ -24,7 +121,55 @@ const HomeScreen = () => {
       }
     }
     getSnap()
-  }, [])
+
+  }, []);
+
+
+  useEffect(() => {
+    async function sendMessage() {
+      const docSnap = await getDoc(doc(db, "Users", auth.currentUser.uid))
+      if (docSnap.data().isFirst) {
+        if (docSnap.data().expoToken) {
+          await sendWelcomeNotification(docSnap.data().expoToken).then(() => {
+            console.log("Message Fired 🚒");
+          })
+        } else {
+          console.log("Token Not Found");
+        }
+      }
+    }
+
+
+    setTimeout((() => sendMessage()), 7000)
+  }, []);
+
+
+  const handleOnStart = () => console.log('start')
+  const handleOnStop = () => console.log('stop')
+  const handleOnStepChange = () => console.log(`stepChange`)
+
+  useEffect(() => {
+    eventEmitter.on('start', handleOnStart)
+    eventEmitter.on('stop', handleOnStop)
+    eventEmitter.on('stepChange', handleOnStepChange)
+
+    return () => {
+      eventEmitter.off('start', handleOnStart)
+      eventEmitter.off('stop', handleOnStop)
+      eventEmitter.off('stepChange', handleOnStepChange)
+    }
+  }, []);
+
+
+
+  const sendWelcomeNotification = async (token) => {
+    await sendWelcomePushNotification(token);
+  }
+
+  const sendNotificationToAllUsers = async () => {
+    const users = await getDocs(collection(db, "Users"))
+    users.forEach(async (user) => await sendPushNotification(user.data().expoToken))
+  }
 
 
 
@@ -38,18 +183,17 @@ const HomeScreen = () => {
         <View style={styles.userCard}>
           <Text style={styles.cardText1}>Namaste, {UserName}</Text>
           <Text style={styles.cardText1}>Status: {status == "Active" ? <Text style={{ color: '#5fff57' }}>Active</Text> : <Text style={{ color: 'red' }}>Busy</Text>}</Text>
-          <TouchableOpacity style={{ backgroundColor: 'orange', padding: 6, borderRadius: 5 }} onPress={() => Actions.profile()}><Text style={{ fontWeight: '500', color: 'white' }}>Edit Profile <FontAwesome5Icon name="user-edit" /></Text></TouchableOpacity>
+          <TouchableOpacity style={{ backgroundColor: '#fc9003', padding: 6, borderRadius: 5 }} onPress={() => Actions.profile()}><Text style={{ fontWeight: '500', color: 'white' }}>Edit Profile <FontAwesome5Icon name="user-edit" /></Text></TouchableOpacity>
         </View>
 
         <ScrollView >
 
-          <View style={styles.card}>
+          <View style={styles.card} >
             <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Karyakari: 12/05/2022 ( Tvndr )</Text>
             <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Mandal Varg: 12/05/2022 ( Tvndr )</Text>
             <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Mandal Baitakh: 12/05/2022 ( Tvndr )</Text>
             <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Mandal Sankhikh: 12/05/2022 ( Tvndr )</Text>
           </View>
-
 
           <View style={styles.card1}>
             <Text style={styles.cardTitle}>Blood Donating Swayam Sevakers <FontAwesome name="heartbeat" size={25} /></Text>
@@ -64,7 +208,7 @@ const HomeScreen = () => {
 
             <View style={{ margin: 5, alignItems: 'center' }}>
               <Text style={styles.cardText}><FontAwesome5 name="bullseye" /> Namaste,Rashtriya Swayam Sewa Sankh Thiruvanvandoor App Published Through Official Website</Text>
-              <Text style={styles.cardSubTitle} onPress={() => Linking.openURL('https://rsstvndrapp.herokuapp.com')}>Through Official Website: <Text style={{ color: 'orange', textDecorationLine: 'underline' }}>https://rsstvndrapp.herokuapp.com</Text></Text>
+              <Text style={styles.cardSubTitle} onPress={() => Linking.openURL('https://rsstvndrapp.herokuapp.com')}>Through Official Website: <Text style={{ color: '#fc9003', textDecorationLine: 'underline' }}>https://rsstvndrapp.herokuapp.com</Text></Text>
               <MarqueeText
                 style={styles.cardSubTitle1}
                 delay={1000}
@@ -79,7 +223,7 @@ const HomeScreen = () => {
 
             <View style={{ margin: 5, alignItems: 'center' }}>
               <Text style={styles.cardText}><FontAwesome5 name="bullseye" /> RSS Thiruvanvandoor Blood Donation Programme Started. All Swayam Sewakers are Requested To Participate</Text>
-              <Text onPress={() => Actions.blood()} style={styles.cardSubTitle}>Rss Tvndr Blood Donation Programmes: <Text style={{ color: 'orange', textDecorationLine: 'underline' }}>Click Here To See More</Text></Text>
+              <Text onPress={() => Actions.blood()} style={styles.cardSubTitle}>Rss Tvndr Blood Donation Programmes: <Text style={{ color: '#fc9003', textDecorationLine: 'underline' }}>Click Here To See More</Text></Text>
               <MarqueeText
                 style={styles.cardSubTitle1}
                 delay={1000}
@@ -109,6 +253,37 @@ const HomeScreen = () => {
 
         </ScrollView>
 
+        <TourGuideZoneByPosition
+          zone={1}
+          shape={'rectangle'}
+          isTourGuide
+          top={10}
+          height={140}
+          width={'100%'}
+          text="In This Section You Can See Next Karyakari, Mandal Baitak, Mandal Sankhik And Other Important Days"
+        />
+
+
+        <TourGuideZoneByPosition
+          zone={2}
+          shape={'rectangle'}
+          isTourGuide
+          top={150}
+          height={140}
+          width={'100%'}
+          text="In This Section You Can See Rss Tvndr Blood Donation Prg And Blood Donaters"
+        />
+
+        <TourGuideZoneByPosition
+          zone={3}
+          shape={'rectangle'}
+          isTourGuide
+          top={-40}
+          right={8}
+          height={40}
+          width={110}
+          text="In This Button You Can Edit Your Profile"
+        />
 
       </SafeAreaView>
     </View>
@@ -231,6 +406,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 13,
     color: '#fff',
+    fontFamily: 'sans-serif',
     margin: 2
   },
   cardText: {

@@ -4,25 +4,25 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCAWxpWL9iTD5QVwIaY-4V3vo7AUhreueo",
-    authDomain: "otp-generator-and-users-db.firebaseapp.com",
-    projectId: "otp-generator-and-users-db",
-    storageBucket: "otp-generator-and-users-db.appspot.com",
-    messagingSenderId: "76579294228",
-    appId: "1:76579294228:web:f32246444640487e756b01",
-    measurementId: "G-27YFRDLRC5"
-  };
+  apiKey: "AIzaSyDz86Mb6rn8JSesxNaJolGU_el67enmUSE",
+  authDomain: "sankh-mandir-app.firebaseapp.com",
+  projectId: "sankh-mandir-app",
+  storageBucket: "sankh-mandir-app.appspot.com",
+  messagingSenderId: "976054396303",
+  appId: "1:976054396303:web:806fe9250827743bab97fa",
+  measurementId: "G-XWPWXQD0ZL"
+};
 
-  try{
-    if(!firebase.apps.length){
+try {
+  if (!firebase.apps.length) {
     initializeApp(firebaseConfig)
-    }
-  }catch{
-    console.log("ERROR")
   }
+} catch {
+  console.log("ERROR")
+}
 
-  const app = getApp();
-  const auth = getAuth();
-  const db = getFirestore(app);
+const app = getApp();
+const auth = getAuth();
+const db = getFirestore(app);
 
-  export {app,auth,db}
+export { app, auth, db }
