@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Image,
   Linking,
@@ -9,20 +10,30 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import MaterialsIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { Actions } from "react-native-router-flux";
 
 const BloodScreen = () => {
   const [snap, setSnap] = useState([]);
+  const [User, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getSnap = async () => {
+      setLoading(true)
+      const snapShot = await getDoc(doc(db, "Users", auth.currentUser?.uid));
+      setUser(snapShot.data())
+
       const querySnapshot = await getDocs(collection(db, "Users"));
       querySnapshot.forEach((doc) => {
         setSnap((prev) => [...prev, doc.data()]);
       });
+      setLoading(false)
     };
+
     getSnap();
   }, []);
 
@@ -42,9 +53,10 @@ const BloodScreen = () => {
 
   return (
     <SafeAreaView style={{ height: "98%" }}>
+      {loading && <ActivityIndicator size={80} style={styles.loader} color="orange" />}
       <View style={styles.container}>
-        <Image style={styles.image} source={require("../assets/logo1`.png")} />
-        <Text style={styles.title}>Swayam Sewakers Tvndr</Text>
+        <Image style={styles.image1} source={require("../assets/bloodhand.png")} />
+        <Text style={styles.title}>Blood Donators</Text>
         <Text style={styles.subTitle}>
           Contact Our HelpLine Number:{" "}
           <Text
@@ -54,20 +66,18 @@ const BloodScreen = () => {
             7306899364
           </Text>
         </Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.subTitle}>
+            Your Status: {User.status == "Active" ? <Text style={{ color: '#5fff57' }}>Active </Text> : <Text style={{ color: 'red' }}>Busy </Text>}
+          </Text>
+          <Text style={styles.subTitle}>
+            Blood Donated: {User.bloodDonated}
+          </Text>
+        </View>
         <Text style={styles.subTitle}>
           Rss Thiruvanvandoor Blood Donating Programme. You Can Directly Contact
-          The Blood Donater By Clicking The Status Button{" "}
+          The Blood Donater By Clicking The Green Button <MaterialsIcon name="heart-plus" size={12} color="green" style={{ backgroundColor: 'white', borderRadius: 30, padding: 5 }} />
         </Text>
-        <Image
-          style={styles.image1}
-          source={require("../assets/blood12.png")}
-        />
-        <MaterialsIcon
-          name="heart-pulse"
-          size={40}
-          color="red"
-          style={{ position: "absolute", left: "16%", top: "32%" }}
-        />
         <MaterialsIcon
           name="heart-circle-outline"
           size={40}
@@ -79,32 +89,32 @@ const BloodScreen = () => {
         <Text style={styles.text}>Name</Text>
         <Text style={styles.text}>Phone Number</Text>
         <Text style={styles.text}>Blood Group</Text>
-        <Text style={styles.text}>Status</Text>
+        <Text style={styles.text}>Contact</Text>
       </View>
       <ScrollView style={styles.scroll}>
         {snap.map((doc) => (
           <View style={styles.donaters}>
-            <Text style={styles.text} key={Date.now()}>
+            <Text style={styles.text} >
               {doc.name}
             </Text>
-            <Text style={styles.text} key={Date.now()}>
+            <Text style={styles.text} >
               {doc.phone.slice(3, -6)}XXXXX
             </Text>
-            <Text style={styles.text} key={Date.now()}>
+            <Text style={styles.text} >
               {doc.blood}
             </Text>
             {doc.status == "Active" ? (
               <Text
                 style={styles.status}
-                key={Date.now()}
-                onPress={() => needBlood()}
+
+                onPress={() => Actions.bloodprofile({ uid: doc.uid })}
               >
                 <MaterialsIcon color={"green"} name="heart-plus" size={30} />
               </Text>
             ) : (
               <Text
                 style={styles.status}
-                key={Date.now()}
+
                 onPress={() =>
                   Alert.alert(
                     "Not Active",
@@ -163,12 +173,12 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   image1: {
-    width: 50,
-    height: 130,
-    margin: 5,
+    width: 100,
+    height: 100,
+    margin: 3,
     position: "absolute",
-    left: 5,
-    top: "25%",
+    left: 0,
+    top: 0,
     zIndex: 1000,
   },
   title: {
@@ -181,7 +191,7 @@ const styles = StyleSheet.create({
   subTitle: {
     color: "white",
     fontSize: 10,
-    fontWeight: "400",
+    fontWeight: "500",
     margin: 3,
     textAlign: "center",
   },
@@ -219,5 +229,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     padding: 2,
+  },
+  loader: {
+    zIndex: 10000,
+    justifyContent: 'center',
+    position: 'absolute',
+    height: 40,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    alignItems: 'center',
+    left: '40%',
+    top: '50%'
   },
 });

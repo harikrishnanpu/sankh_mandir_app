@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -62,15 +62,17 @@ const GhoshScreen = () => {
       {ghoshPage ?
 
         <SafeAreaView style={styles.card}>
-
+          <Image style={styles.image} source={require('../assets/ghosh.png')} />
           <Text style={styles.text}>Rss Tvndr Gosh Team <FontAwesome5 name="drum" size={25} /></Text>
           <Text style={styles.subtext}>Namaste, {auth.currentUser?.displayName} You Are Selected As {ghoshItem} Ghosh Vatak Further Updates Will Notify You.. </Text>
-          {ghoshItem == "Anak" ? <TouchableOpacity onPress={() => Alert.alert("Sorry, Under Review", "Please Try Again Later")} style={styles.button}><Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', fontSize: 15 }}>{ghoshItem} <FontAwesome5 name="drum" size={25} /></Text></TouchableOpacity> : <TouchableOpacity onPress={() => Alert.alert("Sorry, Under Review", "Please Try Again Later")} style={styles.button}><Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', fontSize: 15 }}>{ghoshItem} <MaterialsIcon name="trumpet" size={25} /></Text></TouchableOpacity>}
+          {ghoshItem == "Anak" ? <TouchableOpacity onPress={() => Alert.alert("Sorry, Under Review", "Please Try Again Later")} style={styles.button}><Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', fontSize: 20 }}>{ghoshItem} <FontAwesome5 name="drum" size={25} /></Text></TouchableOpacity> : <TouchableOpacity onPress={() => Alert.alert("Sorry, Under Review", "Please Try Again Later")} style={styles.button}><Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', fontSize: 15 }}>{ghoshItem} <MaterialsIcon name="trumpet" size={25} /></Text></TouchableOpacity>}
+          <Text style={styles.text}>Page Under Updation Active Within 10 Days</Text>
           <Text style={{ bottom: 0, fontWeight: '400', color: 'white', fontSize: 10, alignItems: 'center', justifyContent: 'center', margin: 10, textAlign: 'center' }}>&copy; 2022 Sankh Mandir App<Text style={{ color: 'orange' }}> Terms And Conditions Applied</Text> {'\n'} Disclaimer: Verified Users Are Only Acceptable</Text>
 
         </SafeAreaView>
 
         : <SafeAreaView style={styles.card}>
+          <Image style={styles.image} source={require('../assets/ghosh.png')} />
           <Text style={styles.text}>Rss Tvndr Gosh Team Registertaion <FontAwesome5 name="drum" size={25} /></Text>
           <Text style={styles.subtext
           }>Namaste, {auth.currentUser?.displayName} Welcome To Rss Tvndr Ghosh Team. Select A Ghosh Item For Registeration</Text>
@@ -141,7 +143,7 @@ const GhoshScreen = () => {
             />
           </View>
 
-          <TouchableOpacity onPress={setGhoshItem} style={styles.button}><Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', fontSize: 15 }}>Next</Text></TouchableOpacity>
+          <TouchableOpacity onPress={setGhoshItem} style={styles.button}><Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold', fontSize: 15, margin: 5 }}>Next</Text></TouchableOpacity>
 
 
           <Text style={{ bottom: 9, fontWeight: '400', color: 'white', fontSize: 10, alignItems: 'center', justifyContent: 'center', margin: 10, textAlign: 'center' }}>&copy; 2022 Sankh Mandir App<Text style={{ color: 'orange' }}> Terms And Conditions Applied</Text> {'\n'} Disclaimer: Verified Users Are Only Acceptable</Text>
@@ -164,7 +166,6 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     margin: 5,
-    height: '50%'
   },
   text: {
     color: 'orange',
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
   subtext: {
     color: 'white',
     fontSize: 13,
-    fontWeight: '400',
+    fontWeight: '600',
     textAlign: 'center',
     margin: 4
   },
@@ -196,8 +197,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#ffa200',
     color: 'white',
-    margin: 10,
+    margin: 20,
     borderRadius: 8,
+    padding: 15,
     width: '50%',
     padding: 7,
     textAlign: 'center',
@@ -212,5 +214,13 @@ const styles = StyleSheet.create({
     marginBottom: 'auto',
     alignItems: 'center',
     marginTop: 'auto'
+  },
+  image: {
+    width: 200,
+    height: 130,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 5,
+    marginTop: 2
   },
 })

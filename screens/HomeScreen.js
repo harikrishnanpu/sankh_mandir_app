@@ -101,6 +101,7 @@ const HomeScreenComPonent = () => {
 
   const [UserName, setUserName] = useState('Loading..');
   const [status, setStatus] = useState('Loading..');
+  const [ghosh, setGhosh] = useState(null)
   const {
     start, // a function to start the tourguide
     stop, // a function  to stopping it
@@ -118,6 +119,9 @@ const HomeScreenComPonent = () => {
       if (docSnap.exists()) {
         setUserName(docSnap.data().name)
         setStatus(docSnap.data().status)
+        if (docSnap.data().ghosh) {
+          setGhosh(docSnap.data().ghosh)
+        }
       }
     }
     getSnap()
@@ -140,7 +144,7 @@ const HomeScreenComPonent = () => {
     }
 
 
-    setTimeout((() => sendMessage()), 7000)
+    setTimeout((() => sendMessage()), 15000)
   }, []);
 
 
@@ -243,7 +247,7 @@ const HomeScreenComPonent = () => {
             <Text style={styles.cardTitle}> Sankh Gosh Team Tvndr <FontAwesome5 name="drum" size={25} /></Text>
             <Text style={styles.cardText}>Namaste, Rss Thiruvanvandoor Ghosh Team Informations Available. All Informations About Ghosh You Can See Here And Also You Can Buy Ghosh Items Online</Text>
             <Text style={styles.cardSubTitle}>Buy Ghosh Items ( Vamsi, Anak, Shankh ) Online</Text>
-            <TouchableOpacity style={styles.cardButton} onPress={() => Actions.ghosh()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>More Informations</Text></TouchableOpacity>
+            {ghosh ? <TouchableOpacity style={styles.cardButton} onPress={() => Actions.ghosh()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Sankh Gosh</Text></TouchableOpacity> : <TouchableOpacity style={styles.cardButton} onPress={() => Actions.ghosh()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Register</Text></TouchableOpacity>}
           </View>
 
           <View style={styles.card5}>

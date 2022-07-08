@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { updateProfile } from 'firebase/auth';
+import { signOut, updateProfile } from 'firebase/auth';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import IoniIcon from 'react-native-vector-icons/Ionicons'
 import DropDownPicker from 'react-native-dropdown-picker';
+import MaterialsIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Actions } from 'react-native-router-flux'
 
 
 
@@ -16,7 +18,8 @@ const EditProfile = () => {
   const [UpName, setUpName] = useState(auth.currentUser.displayName);
   const [Phone, setPhone] = useState('Loading..');
   const [UpPhone, setUpPhone] = useState(auth.currentUser.phoneNumber.slice(3));
-  const [Place, setPlace] = useState('Loading..');
+  const [Place, setPlace] = useState('');
+  const [BloodDonated, setBloodDonated] = useState(0);
   const [UpPlace, setUpPlace] = useState('');
   const [Blood, setBlood] = useState('Loading..');
   const [Status, setStatus] = useState('Loading..');
@@ -26,6 +29,10 @@ const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [DropDownOpen, setDropOpen] = useState(false);
   const [DropDown1Open, setDrop1Open] = useState(false);
+  const [Section1, setSection1] = useState(true);
+  const [Section2, setSection2] = useState(false);
+  const [Section3, setSection3] = useState(false);
+
 
 
 
@@ -35,10 +42,10 @@ const EditProfile = () => {
       if (docSnap.exists()) {
         setName(docSnap.data().name)
         setPhone(docSnap.data().phone)
-        setPlace(docSnap.data().place)
+        setUpPlace(docSnap.data().place)
         setBlood(docSnap.data().blood)
         setStatus(docSnap.data().status)
-
+        setBloodDonated(docSnap.data().bloodDonated)
       }
     }
     getSnap()
@@ -60,13 +67,24 @@ const EditProfile = () => {
         place: UpPlace
       })
 
-      setLoading(false)
-      setUpdatePage(false)
+      setLoading(false);
+      setUpdatePage(false);
+      setSection3(false);
+      setSection1(true);
 
     } catch {
       setLoading(false)
       Alert.alert("ERRROR OCCURED")
     }
+  }
+
+  const updateStatus = (status) => {
+    if (status == "Active") {
+      setUpStatus("Active")
+    } else {
+      setUpStatus("Busy")
+    }
+
   }
 
 
@@ -82,107 +100,54 @@ const EditProfile = () => {
           <ScrollView style={{ height: '99%', padding: 10 }}>
             <View style={{ width: '98%', justifyContent: 'center', }}>
               <Text style={{ fontWeight: '700', fontSize: 15, color: 'orange', margin: 5, marginBottom: 2, textAlign: 'center' }}>Edit Your Personal Informations</Text>
-              <Text style={{ fontWeight: '400', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Select Your Blood Group And Current Status To Update Your Personal Information</Text>
+              {Section1 && <Text style={{ fontWeight: '600', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Enter Your Full Name If You Want To Update</Text>}
+              {Section2 && <Text style={{ fontWeight: '600', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Enter Your Place Name If Changed Or Want To Update</Text>}
+              {Section3 && <Text style={{ fontWeight: '600', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Select Your Blood Group And Current Status To Update Your Personal Information</Text>}
 
 
-              <Text style={{ fontWeight: '300', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Updating Name:</Text>
-              <TextInput
+              {Section1 && <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Updating Name:</Text>}
+              {Section1 && <TextInput
                 style={styles.input1}
                 placeholder="Full Name"
                 keyboardType="name-phone-pad"
+                autoFocus
                 value={UpName}
                 onChangeText={name => setUpName(name)}
-              />
+              />}
 
-              <Text style={{ fontWeight: '300', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Your Updating Phone Number:</Text>
-              <TextInput
+              {Section1 && <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Your Updating Phone Number:</Text>}
+              {Section1 && <TextInput
                 style={styles.input1}
                 placeholder="7306899XXX"
                 keyboardType="phone-pad"
                 value={`${UpPhone} (Not Editable)`}
                 editable={false}
                 onChangeText={phone => setUpPhone(phone)}
-              />
+              />}
 
 
-              <Text style={{ fontWeight: '300', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Your Place:</Text>
-              <TextInput
+              {Section2 && <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Update Your Place Name:</Text>}
+              {Section2 && <TextInput
                 style={styles.input1}
                 value={UpPlace}
+                autoFocus
                 placeholder="Eg: Thiruvanvandoor"
                 keyboardType="name-phone-pad"
                 onChangeText={place => setUpPlace(place)}
-              />
+              />}
 
 
-              <View style={{ backgroundColor: '#585959', padding: 10, borderRadius: 10, marginBottom: 20 }} >
+              {Section3 && <View >
 
-                <Text style={styles.text3}>Current Status And Blood Group</Text>
-                <View style={{ width: 'auto', marginTop: 8 }}>
-                  <DropDownPicker
-                    containerStyle={{ marginBottom: 15, backgroundColor: 'grey' }}
-                    placeholder="Choose Your Current Status"
-                    theme='LIGHT'
-                    placeholderStyle={{
-                      fontWeight: "400"
-                    }}
-                    dropDownContainerStyle={{ height: 500, width: 100 }}
-                    open={DropDownOpen}
-                    value={UpStatus}
-                    listMode="MODAL"
-                    modalProps={{
-                      animationType: "slide",
-                      presentationStyle: 'overFullScreen'
-                    }}
-                    modalContentContainerStyle={{
-                      backgroundColor: "#fff",
-                    }}
-                    modalTitleStyle={{
-                      fontWeight: "bold"
-                    }}
-                    listParentContainerStyle={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 'auto'
-                    }}
-                    listParentLabelStyle={{
-                      fontWeight: "400",
-                      borderRadius: 10,
-                      padding: 10,
-                      margin: 5,
-                      fontSize: 16
-
-                    }}
-                    itemSeparatorStyle={{
-                      margin: 2
-                    }}
-                    tickIconContainerStyle={{
-                      backgroundColor: 'grey',
-                      padding: 10,
-                      borderRadius: 5
-                    }}
-                    disabledItemLabelStyle={{
-                      color: 'grey',
-                      fontWeight: '400',
-                      fontSize: 12,
-                      textAlign: 'center'
-                    }}
-                    disabledItemContainerStyle={{
-                      height: 'auto'
-                    }}
-                    itemSeparator={true}
-                    modalTitle="Select Your Current Status"
-                    closeOnBackPressed={true}
-                    items={[
-                      { label: `Active Status (Click Here)`, value: 'Active' },
-                      { label: `InActive Status (Click Here)`, value: 'Busy' },
-                      { label: `About: InActive Status \nIf You Select InActive Status You States That You Are Not Willing To Donate Your Blood To Others\n\nAbout: Active Status \nIf You Select Active Status You Are Willing To Donate Your Blood To Others Who Want Blood For Medical Conditions \n\n\n\n\n CopyRight 2022 Sankh Mandir App Terms And Conditions \n\n  Disclaimer: If Any Mistakes Happen Sankh Mandir App May Disable Your Account`, disabled: true }
-                    ]}
-                    setOpen={setDropOpen}
-                    setValue={setUpStatus}
-                  />
+                <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Update Your Current Status</Text>
+                <View style={{ width: 'auto', marginTop: 8, marginBottom: 25, flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity onPress={() => updateStatus("Active")} style={{
+                    backgroundColor: UpStatus == "Active" ? '#8a8a8a' : 'white',
+                    borderRadius: 15, padding: 8, paddingHorizontal: 15, margin: 5
+                  }} ><Text style={{ fontWeight: 'bold', color: '#5aed61', }}>Active <MaterialsIcon name="heart-plus" size={20} /></Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => updateStatus("Busy")} style={{ backgroundColor: UpStatus == "Busy" ? '#8a8a8a' : 'white', borderRadius: 15, padding: 8, paddingHorizontal: 15, margin: 5 }} ><Text style={{ fontWeight: 'bold', color: '#fa3939', }}>Busy <MaterialsIcon name="heart-off" size={20} /></Text></TouchableOpacity>
                 </View>
-
+                <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Update Your Blood Group</Text>
                 <View style={{ width: 'auto' }}>
                   <DropDownPicker
                     theme="LIGHT"
@@ -255,14 +220,28 @@ const EditProfile = () => {
                     setValue={setUpBlood}
                   />
                 </View>
-              </View>
+              </View>}
 
-              <Button
-                disabled={!UpBlood || !UpStatus || !UpName || !UpPhone}
+              {Section1 && <Button
+                disabled={!UpName}
+                title="Next"
+                color="orange"
+                onPress={() => { setSection1(false); setSection2(true) }}
+              />}
+
+              {Section2 && <Button
+                disabled={!UpPlace}
+                title="Next"
+                color="orange"
+                onPress={() => { setSection2(false); setSection3(true) }}
+              />}
+
+              {Section3 && <Button
+                disabled={!UpBlood || !UpStatus}
                 title="Update Account"
                 color="orange"
                 onPress={UpdateUser}
-              />
+              />}
 
 
             </View>
@@ -282,8 +261,9 @@ const EditProfile = () => {
                 <Text style={styles.text}>Blood: {Blood}</Text>
                 <Text style={styles.text}>Place: {Place}</Text>
                 <Text style={styles.text}>Points: 10</Text>
-                <Text style={styles.text}>Blood Donated: 1</Text>
+                <Text style={styles.text}>Blood Donated: {BloodDonated}</Text>
                 <Text style={styles.text}>Status: {Status == "Active" ? <Text style={{ color: '#61ff7b' }}>Active</Text> : <Text style={{ color: 'red' }}>Busy</Text>}</Text>
+                <TouchableOpacity onPress={() => signOut(auth).then(() => Actions.login())} style={{ backgroundColor: '#8f8f8f', padding: 8, borderRadius: 10, alignItems: 'center', margin: 5 }}><Text style={{ color: 'white', fontWeight: 'bold' }}>Logout</Text></TouchableOpacity>
               </View>
               <View style={{ marginTop: 8, marginBottom: 15, margin: 5, backgroundColor: 'white', borderRadius: 10, padding: 8 }}>
                 <Text style={{ margin: 2, fontSize: 15, fontWeight: 'bold', color: '#fa6b6b' }}>Blood Donation Informations</Text>
@@ -331,8 +311,8 @@ const styles = StyleSheet.create({
     height: 100,
     marginLeft: 'auto',
     marginRight: 'auto',
-    marginBottom: 15,
-    marginTop: 10
+    marginBottom: 10,
+    marginTop: 2
   },
   title: {
     color: 'orange',
@@ -389,7 +369,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    color: 'black',
+    color: 'white',
     margin: 5,
   },
   loader: {

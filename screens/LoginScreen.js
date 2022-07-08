@@ -71,12 +71,15 @@ const LoginScreen = () => {
   const OtpRef6 = useRef();
   const verificationCode = Otp1 + Otp2 + Otp3 + Otp4 + Otp5 + Otp6;
   const [ConfirmIdentity, setConfirmIdentity] = useState(false);
+  const [ConfirmIdentity1, setConfirmIdentity1] = useState(false);
   const [DropDownOpen, setDropOpen] = useState(false)
 
 
 
 
   const verifyPhoneNumber = async () => {
+    setLoading(true)
+    showMessage('')
     const phoneAuthNumber = '+91' + phoneNumber
     const phoneProvider = new PhoneAuthProvider(auth);
     try {
@@ -86,8 +89,10 @@ const LoginScreen = () => {
       )
       setVerificationId(verificationId);
       setOtpScreen(true)
+      setLoading(false)
     } catch (err) {
-      Alert.alert("Error Occured", err.message)
+      showMessage({ text: err.message })
+      setLoading(false)
     }
   }
 
@@ -104,7 +109,6 @@ const LoginScreen = () => {
           displayName: Username
         })
       })
-      showMessage({ text: 'Phone authentication successful 👍', color: 'green' });
       const DocSnap = await getDoc(doc(db, "Users", auth.currentUser.uid));
       if (DocSnap.exists()) {
         Actions.home()
@@ -116,7 +120,7 @@ const LoginScreen = () => {
       showMessage(null)
     } catch (err) {
       setLoading(false)
-      showMessage({ text: `Error: ${err.message}`, color: 'red' });
+      showMessage({ text: `Error: ${err.message}` });
     }
   }
 
@@ -131,7 +135,9 @@ const LoginScreen = () => {
           blood: blood,
           place: place,
           status: status,
-          isFirst: true
+          isFirst: true,
+          uid: auth.currentUser.uid,
+          bloodDonated: "0"
         });
       } else {
         await setDoc(doc(db, "Users", auth.currentUser.uid), {
@@ -140,7 +146,9 @@ const LoginScreen = () => {
           blood: blood,
           place: place,
           status: status,
-          isFirst: true
+          isFirst: true,
+          uid: auth.currentUser.uid,
+          bloodDonated: 0
         });
       }
       Actions.home()
@@ -164,8 +172,9 @@ const LoginScreen = () => {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={app.options}
-        title="Sankh Mandir App Security"
-        accessibilityHint='Proove You Are A Human'
+        title="Click The Below Tick Box"
+        textZoom={110}
+        cancelLabel="Close"
       />
 
       {loading && <ActivityIndicator size={80} style={styles.loader} color="#fc9003" />}
@@ -176,20 +185,27 @@ const LoginScreen = () => {
 
 
         <Text style={styles.title}>SANKHA MANDIR APP</Text>
-        {ConfirmIdentity ? undefined : <Text style={styles.label}>Thiruvanvandoor</Text>}
+        {ConfirmIdentity ? undefined : ConfirmIdentity1 ? undefined : <Text style={styles.label}>Thiruvanvandoor</Text>}
 
-        {ConfirmIdentity && <View style={{ alignItems: 'center' }}>
-          <Text style={styles.label}>Personal Details:</Text>
-          <Text style={styles.label}>Name: {auth.currentUser?.displayName ? auth.currentUser.displayName : undefined}</Text>
-          <Text style={styles.label}>Phone Number: {auth.currentUser?.phoneNumber ? auth.currentUser.phoneNumber : undefined}</Text>
-        </View>}
+        {ConfirmIdentity ? <View style={{ alignItems: 'center' }}>
+          <Text style={{ fontWeight: 'bold' }}>Given Personal Details</Text>
+          <Text style={styles.label}>Name: <Text style={{ color: 'orange' }}>{auth.currentUser?.displayName ? auth.currentUser.displayName : undefined}</Text> </Text>
+          <Text style={styles.label}>Phone Number: <Text style={{ color: 'orange' }}>{auth.currentUser?.phoneNumber ? auth.currentUser.phoneNumber : undefined}</Text>  <Text onPress={() => { setOtpScreen(false); setConfirmIdentity(false); setConfirmIdentity1(false) }} style={{ color: 'grey', textDecorationLine: 'underline' }}>Change</Text></Text>
+        </View> : undefined}
+
+        {ConfirmIdentity1 ? <View style={{ alignItems: 'center' }}>
+          <Text style={{ fontWeight: 'bold' }}>Given Personal Details</Text>
+          <Text style={styles.label}>Name: <Text style={{ color: 'orange' }}>{auth.currentUser?.displayName ? auth.currentUser.displayName : undefined}</Text> </Text>
+          <Text style={styles.label}>Phone Number: <Text style={{ color: 'orange' }}>{auth.currentUser?.phoneNumber ? auth.currentUser.phoneNumber : undefined}</Text> {ConfirmIdentity1 ? undefined : <Text onPress={() => { setOtpScreen(false); setConfirmIdentity(false) }} style={{ color: 'grey', textDecorationLine: 'underline' }}>Change</Text>}</Text>
+        </View> : undefined}
 
 
 
         <KeyboardAvoidingView style={styles.container}>
-          {OtpScreen && ConfirmIdentity ? undefined : OtpScreen ? <View style={styles.backButton} onPress={() => setOtpScreen(false)} ><MaterialsIcon onPress={() => setOtpScreen(false)} style={{ textAlign: 'center', textAlignVertical: 'center', color: 'white', alignItems: 'center', fontWeight: 'bold' }} name="arrow-back" size={22} /><Text onPress={() => setOtpScreen(false)} style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', textAlignVertical: 'center', fontSize: 16 }}>Back</Text></View> : undefined}
-          {ConfirmIdentity && <Text style={{ margin: 1, color: 'white', textAlign: 'center', fontWeight: 'bold' }}>We Need More Information To Activate Your Sankha Mandir Account</Text>}
-          {OtpScreen && ConfirmIdentity ? undefined : <Image style={styles.image} source={require('../assets/logo1`.png')} />}
+          {OtpScreen && ConfirmIdentity ? undefined : OtpScreen && ConfirmIdentity1 ? undefined : OtpScreen ? <View style={styles.backButton} onPress={() => setOtpScreen(false)} ><MaterialsIcon onPress={() => setOtpScreen(false)} style={{ textAlign: 'center', textAlignVertical: 'center', color: 'white', alignItems: 'center', fontWeight: 'bold' }} name="arrow-back" size={22} /><Text onPress={() => setOtpScreen(false)} style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', textAlignVertical: 'center', fontSize: 16 }}>Back</Text></View> : undefined}
+          {ConfirmIdentity && <Text style={{ margin: 1, color: 'white', textAlign: 'center', fontWeight: 'bold' }}>Enter Your Blood Group For Registeration</Text>}
+          {ConfirmIdentity1 && <Text style={{ margin: 1, color: 'white', textAlign: 'center', fontWeight: 'bold' }}>Enter Your Current Place For Shaka Registeration</Text>}
+          {OtpScreen && ConfirmIdentity ? undefined : OtpScreen && ConfirmIdentity1 ? undefined : <Image style={styles.image} source={require('../assets/logo1`.png')} />}
 
           {message ? (
             <TouchableOpacity
@@ -236,7 +252,7 @@ const LoginScreen = () => {
               style={styles.input}
               placeholder="Enter Your Number"
               maxLength={10}
-              autoComplete="tel-device"
+              autoComplete="tel"
               dataDetectorTypes="phoneNumber"
               keyboardType="phone-pad"
               textContentType="telephoneNumber"
@@ -253,8 +269,8 @@ const LoginScreen = () => {
           </View>
 
 
-          {OtpScreen && !ConfirmIdentity ? <View>
-            <Text style={{ margin: 5, textAlign: 'center', fontSize: 11, fontWeight: 'bold' }}>OTP Sent Successfully To Your Number: <Text style={{ color: 'orange' }}>{phoneNumber}</Text></Text>
+          {OtpScreen && !ConfirmIdentity && !ConfirmIdentity1 ? <View>
+            <Text style={{ margin: 6, textAlign: 'center', fontSize: 11, fontWeight: 'bold' }}>OTP Sent Successfully To Your Number: <Text style={{ color: 'orange' }}>{phoneNumber}</Text></Text>
             <Text style={{ margin: 5, textAlign: 'center', fontSize: 14, fontWeight: 'bold' }}>Enter Verification Code ( OTP )</Text>
 
             <View style={{
@@ -273,6 +289,7 @@ const LoginScreen = () => {
                 maxLength={1}
                 ref={OtpRef1}
                 autoFocus
+                autoComplete='sms-otp'
               />
 
               <TextInput
@@ -282,7 +299,6 @@ const LoginScreen = () => {
                   setOtp2(text)
                   text ? OtpRef3.current.focus() : OtpRef1.current.focus()
                 }}
-
                 maxLength={1}
                 keyboardType="number-pad"
                 ref={OtpRef2}
@@ -355,9 +371,8 @@ const LoginScreen = () => {
             {OtpScreen && ConfirmIdentity ?
               <KeyboardAvoidingView style={{ width: '98%', justifyContent: 'center' }}>
 
-                <View style={{ backgroundColor: '#8c8c8b', width: '100%', padding: 4, borderRadius: 10, margin: 3 }}>
-                  <Text style={{ fontWeight: '600', fontSize: 14, margin: 5, marginBottom: 5, textAlign: 'center' }}>Enter Your Blood Group For Rss Tvndr Blood Donation Prg <Fontisto size={20} style={{ color: 'red' }} name="blood-drop" /> </Text>
-                  <View style={{ width: '99%', margin: 5 }}>
+                <View style={{ backgroundColor: '#a8a8a7', width: '100%', padding: 5, borderRadius: 10, marginBottom: 15, margin: 5 }}>
+                  <View style={{ width: '99%', margin: 8 }}>
                     <DropDownPicker
                       containerStyle={{ marginBottom: 15, zIndex: 10 }}
                       placeholder="Choose Your Blood Group"
@@ -427,23 +442,45 @@ const LoginScreen = () => {
                   </View>
                 </View>
 
-                <Text style={{ fontWeight: '600', fontSize: 14, margin: 8, marginBottom: 5 }}>Enter Your Place:</Text>
+                <Button
+                  disabled={!blood}
+                  title="Next"
+                  color="#fc9003"
+                  onPress={() => {
+                    setConfirmIdentity(false);
+                    setConfirmIdentity1(true);
+                  }}
+                />
+
+
+              </KeyboardAvoidingView> : undefined
+            }
+
+          </SafeAreaView>
+
+          <SafeAreaView>
+
+            {OtpScreen && ConfirmIdentity1 ? (
+              <KeyboardAvoidingView style={{ width: '50%', justifyContent: 'center' }}>
+
+                <Text style={{ fontWeight: '600', fontSize: 14, margin: 8, marginBottom: 5 }}>Enter Your Place Name</Text>
                 <TextInput
                   style={styles.input1}
                   placeholder="Eg: Thiruvanvandoor"
                   keyboardType="name-phone-pad"
                   onChangeText={place => setPlace(place)}
+                  autoFocus
                 />
 
                 <Button
-                  disabled={!blood || !place}
+                  disabled={!place}
                   title="Activate Account"
                   color="#fc9003"
                   onPress={verifyBloodGroup}
                 />
 
 
-              </KeyboardAvoidingView> : undefined
+              </KeyboardAvoidingView>) : (undefined)
             }
 
           </SafeAreaView>
@@ -531,8 +568,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    color: 'black',
-    margin: 7,
+    color: 'white',
+    margin: 8,
+    minWidth: 280,
+    maxWidth: 300
   },
   Otpinput: {
     height: 40,
@@ -572,7 +611,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'white',
     margin: 15,
-    backgroundColor: 'grey',
+    backgroundColor: '#ff0033',
     width: '100%',
     borderRadius: 5,
     padding: 10,
