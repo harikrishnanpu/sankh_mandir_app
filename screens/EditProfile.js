@@ -43,6 +43,7 @@ const EditProfile = () => {
         setName(docSnap.data().name)
         setPhone(docSnap.data().phone)
         setUpPlace(docSnap.data().place)
+        setUpBlood(docSnap.data().blood)
         setBlood(docSnap.data().blood)
         setStatus(docSnap.data().status)
         setBloodDonated(docSnap.data().bloodDonated)
@@ -97,58 +98,61 @@ const EditProfile = () => {
 
       {updatePage ?
         <View style={{ height: '95%' }} >
-          <ScrollView style={{ height: '99%', padding: 10 }}>
+          <View style={{ height: '99%', padding: 10 }}>
             <View style={{ width: '98%', justifyContent: 'center', }}>
               <Text style={{ fontWeight: '700', fontSize: 15, color: 'orange', margin: 5, marginBottom: 2, textAlign: 'center' }}>Edit Your Personal Informations</Text>
               {Section1 && <Text style={{ fontWeight: '600', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Enter Your Full Name If You Want To Update</Text>}
               {Section2 && <Text style={{ fontWeight: '600', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Enter Your Place Name If Changed Or Want To Update</Text>}
               {Section3 && <Text style={{ fontWeight: '600', fontSize: 12, color: 'white', margin: 5, marginBottom: 20, textAlign: 'center' }}>Select Your Blood Group And Current Status To Update Your Personal Information</Text>}
 
+              {Section1 && <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.411)', padding: 10, borderRadius: 10, margin: 2, marginBottom: 12 }}>
+                {Section1 && <Text style={{ fontWeight: '500', fontSize: 14, margin: 8, marginBottom: 5, color: 'white' }}>Enter Updating Name:</Text>}
+                {Section1 && <TextInput
+                  style={styles.input1}
+                  placeholder="Full Name"
+                  keyboardType="name-phone-pad"
+                  autoFocus
+                  value={UpName}
+                  onChangeText={name => setUpName(name)}
+                />}
 
-              {Section1 && <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Updating Name:</Text>}
-              {Section1 && <TextInput
-                style={styles.input1}
-                placeholder="Full Name"
-                keyboardType="name-phone-pad"
-                autoFocus
-                value={UpName}
-                onChangeText={name => setUpName(name)}
-              />}
-
-              {Section1 && <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Enter Your Updating Phone Number:</Text>}
-              {Section1 && <TextInput
-                style={styles.input1}
-                placeholder="7306899XXX"
-                keyboardType="phone-pad"
-                value={`${UpPhone} (Not Editable)`}
-                editable={false}
-                onChangeText={phone => setUpPhone(phone)}
-              />}
-
-
-              {Section2 && <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Update Your Place Name:</Text>}
-              {Section2 && <TextInput
-                style={styles.input1}
-                value={UpPlace}
-                autoFocus
-                placeholder="Eg: Thiruvanvandoor"
-                keyboardType="name-phone-pad"
-                onChangeText={place => setUpPlace(place)}
-              />}
+                {Section1 && <Text style={{ fontWeight: '500', fontSize: 14, margin: 8, marginBottom: 5, color: 'white' }}>Your Phone Number:</Text>}
+                {Section1 && <TextInput
+                  style={styles.input1}
+                  placeholder="7306899XXX"
+                  keyboardType="phone-pad"
+                  value={`${UpPhone} (Not Editable)`}
+                  editable={false}
+                  onChangeText={phone => setUpPhone(phone)}
+                />}
+              </View>}
 
 
-              {Section3 && <View >
+              {Section2 && <View style={{ backgroundColor: 'rgba(255, 255, 255, 0.411)', padding: 10, borderRadius: 10, margin: 2, marginBottom: 12 }}>
+                {Section2 && <Text style={{ fontWeight: '500', fontSize: 14, margin: 8, marginBottom: 5, color: 'white' }}>Update Your Place Name:</Text>}
+                {Section2 && <TextInput
+                  style={styles.input1}
+                  value={UpPlace}
+                  autoFocus
+                  placeholder="Eg: Thiruvanvandoor"
+                  keyboardType="name-phone-pad"
+                  onChangeText={place => setUpPlace(place)}
+                />}
+              </View>}
 
-                <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Update Your Current Status</Text>
+
+              {Section3 && <View>
+
+                <Text style={{ fontWeight: '500', fontSize: 11, margin: 6, marginBottom: 5, color: 'white', textAlign: 'center' }}>Update Your Current Status By Clicking The Below Status Buttons</Text>
                 <View style={{ width: 'auto', marginTop: 8, marginBottom: 25, flexDirection: 'row', alignItems: 'center' }}>
                   <TouchableOpacity onPress={() => updateStatus("Active")} style={{
-                    backgroundColor: UpStatus == "Active" ? '#8a8a8a' : 'white',
-                    borderRadius: 15, padding: 8, paddingHorizontal: 15, margin: 5
+                    backgroundColor: UpStatus == "Active" ? '#474e5d' : 'white',
+                    borderRadius: 15, padding: 10, paddingHorizontal: 50, margin: 5
                   }} ><Text style={{ fontWeight: 'bold', color: '#5aed61', }}>Active <MaterialsIcon name="heart-plus" size={20} /></Text></TouchableOpacity>
-                  <TouchableOpacity onPress={() => updateStatus("Busy")} style={{ backgroundColor: UpStatus == "Busy" ? '#8a8a8a' : 'white', borderRadius: 15, padding: 8, paddingHorizontal: 15, margin: 5 }} ><Text style={{ fontWeight: 'bold', color: '#fa3939', }}>Busy <MaterialsIcon name="heart-off" size={20} /></Text></TouchableOpacity>
+                  <TouchableOpacity onPress={() => updateStatus("Busy")} style={{ backgroundColor: UpStatus == "Busy" ? '#474e5d' : 'white', borderRadius: 15, padding: 10, paddingHorizontal: 50, margin: 5 }} ><Text style={{ fontWeight: 'bold', color: '#fa3939', }}>Busy <MaterialsIcon name="heart-off" size={20} /></Text></TouchableOpacity>
                 </View>
-                <Text style={{ fontWeight: '500', fontSize: 16, margin: 5, marginBottom: 5 }}>Update Your Blood Group</Text>
-                <View style={{ width: 'auto' }}>
+                <Text style={{ fontWeight: '500', fontSize: 11, margin: 4, marginBottom: 5, color: 'white', textAlign: 'center' }}>Update Your Blood Group By Clicking The Below Button</Text>
+                <View style={{ width: 'auto', marginTop: 8 }}>
                   <DropDownPicker
                     theme="LIGHT"
                     containerStyle={{ marginBottom: 25, zIndex: 10 }}
@@ -245,7 +249,7 @@ const EditProfile = () => {
 
 
             </View>
-          </ScrollView>
+          </View>
         </View>
         :
 
@@ -263,11 +267,24 @@ const EditProfile = () => {
                 <Text style={styles.text}>Points: 10</Text>
                 <Text style={styles.text}>Blood Donated: {BloodDonated}</Text>
                 <Text style={styles.text}>Status: {Status == "Active" ? <Text style={{ color: '#61ff7b' }}>Active</Text> : <Text style={{ color: 'red' }}>Busy</Text>}</Text>
-                <TouchableOpacity onPress={() => signOut(auth).then(() => Actions.login())} style={{ backgroundColor: '#8f8f8f', padding: 8, borderRadius: 10, alignItems: 'center', margin: 5 }}><Text style={{ color: 'white', fontWeight: 'bold' }}>Logout</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => Alert.alert(
+                  "Want To Logout",
+                  "Are You Sure Want To Logout Your Current Account",
+                  [
+                    {
+                      text: "Logout",
+                      onPress: () => { setLoading(true); signOut(auth).then(() => { Actions.login(); setLoading(false) }).catch((e) => { setLoading(false); Alert.alert("Error Ocuured", e.message) }) },
+                    },
+                    {
+                      text: "Cancel",
+                      onPress: () => console.log("Cancel Pressed"),
+                    },
+                  ]
+                )} style={{ backgroundColor: '#8f8f8f', padding: 8, borderRadius: 10, alignItems: 'center', margin: 5 }}><Text style={{ color: 'white', fontWeight: 'bold' }}>Logout</Text></TouchableOpacity>
               </View>
               <View style={{ marginTop: 8, marginBottom: 15, margin: 5, backgroundColor: 'white', borderRadius: 10, padding: 8 }}>
                 <Text style={{ margin: 2, fontSize: 15, fontWeight: 'bold', color: '#fa6b6b' }}>Blood Donation Informations</Text>
-                <Text style={styles.text}>Blood Donated: 2</Text>
+                <Text style={styles.text}>Blood Donated: {BloodDonated}</Text>
                 <Text style={styles.text}>Sankh Mandir Certificates: 2</Text>
                 <TouchableOpacity style={{ backgroundColor: '#8f8f8f', borderRadius: 10, padding: 8, alignItems: 'center', margin: 5 }} onPress={() => Alert.alert("Certificate Not Updated", "You Will Get A Notification When Available")} ><Text style={{ color: 'white', fontWeight: 'bold' }}>Download Certificate <FontAwesome5Icon name="heart" color="red" /></Text></TouchableOpacity>
               </View>
@@ -371,6 +388,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
     color: 'white',
     margin: 5,
+    fontWeight: 'bold'
   },
   loader: {
     zIndex: 10000,

@@ -122,7 +122,7 @@ const BloodScreen = () => {
                     [
                       {
                         text: "Contact",
-                        onPress: () => Linking.openURL("tel:7306899364"),
+                        onPress: () => Linking.openURL(`whatsapp://send?phone=7306899364&text=*I Want To Ask This Donor For Blood Donation* \n *My App Id:* ${auth.currentUser.uid} \n *Donour Id:* ${doc.uid} \n *Blood Group:* ${doc.blood} \n Do Not Change The Above Information. Send Information Directly`),
                       },
                       {
                         text: "Cancel",

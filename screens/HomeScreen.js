@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Linking, ScrollView, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Linking, ScrollView, SafeAreaView, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Actions } from 'react-native-router-flux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -11,11 +11,11 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import {
-  TourGuideProvider, // Main provider
+  TourGuideProvider,// Main provider
   TourGuideZone, // Main wrapper of highlight component
   TourGuideZoneByPosition, // Component to use mask on overlay (ie, position absolute)
   useTourGuideController, // hook to start, etc.
-} from 'rn-tourguide'
+} from 'rn-tourguide';
 
 
 Notifications.setNotificationHandler({

@@ -7,7 +7,8 @@ import { getAuth, onAuthStateChanged, PhoneAuthProvider, signInWithCredential, u
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, getDocs, getDoc } from "firebase/firestore";
 import DropDownPicker from 'react-native-dropdown-picker';
-import MaterialsIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+
 
 
 const firebaseConfig = {
