@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Linking, ScrollView, SafeAreaView, Modal } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Linking, ScrollView, SafeAreaView, Modal, BackHandler } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Actions } from 'react-native-router-flux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -101,7 +101,7 @@ const HomeScreenComPonent = () => {
 
   const [UserName, setUserName] = useState('Loading..');
   const [status, setStatus] = useState('Loading..');
-  const [ghosh, setGhosh] = useState(null)
+  const [ghosh, setGhosh] = useState(null);
   const {
     start, // a function to start the tourguide
     stop, // a function  to stopping it
@@ -245,9 +245,16 @@ const HomeScreenComPonent = () => {
 
           <View style={styles.card4}>
             <Text style={styles.cardTitle}> Sankh Gosh Team Tvndr <FontAwesome5 name="drum" size={25} /></Text>
-            <Text style={styles.cardText}>Namaste, Rss Thiruvanvandoor Ghosh Team Informations Available. All Informations About Ghosh You Can See Here And Also You Can Buy Ghosh Items Online</Text>
+            <Text style={styles.cardText}>Rss Thiruvanvandoor Ghosh Team Informations Available. All Informations About Ghosh You Can See Here And Also You Can Buy Ghosh Items Online</Text>
             <Text style={styles.cardSubTitle}>Buy Ghosh Items ( Vamsi, Anak, Shankh ) Online</Text>
             {ghosh ? <TouchableOpacity style={styles.cardButton} onPress={() => Actions.ghosh()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Sankh Gosh</Text></TouchableOpacity> : <TouchableOpacity style={styles.cardButton} onPress={() => Actions.ghosh()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Register</Text></TouchableOpacity>}
+          </View>
+
+          <View style={styles.card6}>
+            <Text style={styles.cardTitle}>Rss Shakha <FontAwesome5 name="flag" size={25} /></Text>
+            <Text style={styles.cardText}>All Rss Shaka Updates, Ganageetham, Subhashitham, Amritavachanam And Other Shakha Informations Available</Text>
+            <Text style={styles.cardSubTitle}>Masa Vritham And Karyakari Informations</Text>
+            <TouchableOpacity style={styles.cardButton} onPress={() => Actions.shakha()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Shakha</Text></TouchableOpacity>
           </View>
 
           <View style={styles.card5}>
@@ -331,6 +338,22 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: '98%',
     backgroundColor: '#fa8107',
+    justifyContent: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 5,
+    marginBottom: 4,
+    padding: 10,
+    borderRadius: 10,
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    color: 'white'
+  },
+  card6: {
+    height: 'auto',
+    width: '98%',
+    backgroundColor: 'grey',
     justifyContent: 'center',
     marginLeft: 'auto',
     marginRight: 'auto',

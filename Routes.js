@@ -11,6 +11,7 @@ import EditProfile from './screens/EditProfile'
 import GhoshScreen from './screens/GhoshScreen'
 import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/LoginScreen'
+import Shakha from './screens/Shakha'
 import UpdateScreen from './screens/UpdateScreen';
 
 
@@ -96,6 +97,7 @@ export default function Routes() {
                      <Scene onEnter={() => auth?.currentUser ? undefined : Actions.login()} onExit={() => Actions.home()} key="profile" component={EditProfile} title="User Profile" titleStyle={{ justifyContent: 'center', textAlign: 'center', fontWeight: 'bold', color: '#ff5e00' }} renderRightButton={() => (<TouchableOpacity style={{ backgroundColor: '#ff5e00', marginRight: 20, borderRadius: 8, width: 90, height: 34, justifyContent: 'center' }} color="orange" onPress={() => Actions.home()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: '600' }}>Home <FontAwesome5 name="home" /> </Text></TouchableOpacity>)} />
                      <Scene key="ghosh" component={GhoshScreen} title="Sankh Gosh" titleStyle={{ justifyContent: 'center', textAlign: 'center', fontWeight: 'bold', color: '#ff5e00' }} renderRightButton={() => (<TouchableOpacity style={{ backgroundColor: '#ff5e00', marginRight: 20, borderRadius: 8, width: 90, height: 34, justifyContent: 'center' }} color="orange" onPress={() => Actions.home()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: '600' }}>Home <FontAwesome5 name="home" /> </Text></TouchableOpacity>)} />
                      <Scene key="bloodprofile" component={BloodProfile} title="Blood Donator Profile" titleStyle={{ justifyContent: 'center', textAlign: 'center', fontWeight: 'bold', color: 'red' }} renderRightButton={() => (<TouchableOpacity style={{ backgroundColor: '#ff5e00', marginRight: 20, borderRadius: 8, width: 90, height: 34, justifyContent: 'center' }} color="orange" onPress={() => Actions.home()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: '600' }}>Home <FontAwesome5 name="home" /> </Text></TouchableOpacity>)} />
+                     <Scene key="shakha" component={Shakha} title="Shakha" titleStyle={{ justifyContent: 'center', textAlign: 'center', fontWeight: 'bold', color: '#ff5e00' }} renderRightButton={() => (<TouchableOpacity style={{ backgroundColor: '#ff5e00', marginRight: 20, borderRadius: 8, width: 90, height: 34, justifyContent: 'center' }} color="orange" onPress={() => Actions.home()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: '600' }}>Home <FontAwesome5 name="home" /> </Text></TouchableOpacity>)} />
                   </Scene>
                </Router>
 
