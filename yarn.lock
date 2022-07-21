@@ -2130,6 +2130,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.11.tgz#2f4c6e10bee0786abff4604e39a37ded6f3980ce"
   integrity sha512-rQfMIGSR/1r/SyN87+VD8xHHzDYeHaJq6elOSCAD+0iLagXkSI2pfA0LmSXP21uw5i3em7GkkRjfJ8wpqWXZNw==
 
+"@react-native-community/netinfo@8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-8.2.0.tgz#0bcf2b618c3b0ab72bb5529df3e580af9e6ae96b"
+  integrity sha512-mPMg9Uu2XeMX3tainvCWLhD9FZtdox3fcbPXJINuyFNgEQ2AUhGcoUT1dUpcFZrY4eXYiO9cckPhPHq9lWzSAA==
+
 "@react-native-firebase/app@^14.11.1":
   version "14.11.1"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-14.11.1.tgz#5d3587bda0a8877863e59384a4d38f7ebc321835"
@@ -6890,10 +6895,10 @@ react-native-web@0.17.7:
     normalize-css-color "^1.0.2"
     prop-types "^15.6.0"
 
-react-native-webview@^11.22.2:
-  version "11.22.2"
-  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.22.2.tgz#0a57893b637c2825c83395f22b686cc6ac88e465"
-  integrity sha512-bkstn3Vkf3JMrSE2R8xgIzgWu0c2+HAdiYJTo3xWcXN+LIAZFnn198s1QHcOFO7bfPObP4nSnIqzeQTiYjZYDA==
+react-native-webview@11.18.1:
+  version "11.18.1"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.18.1.tgz#0a1893abd391c8f0e7d4c5874bfa737ca6311225"
+  integrity sha512-1VoVmkbsHJ44WA+frMhNfua64t0u2jq80h25sUWrKJRiYrO0XIsKBnJcqrzuOH1ZAT/zDHTqBB5OU+bxEHLJmQ==
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"

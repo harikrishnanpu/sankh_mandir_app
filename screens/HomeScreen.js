@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Linking, ScrollView, SafeAreaView, Modal, BackHandler } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Linking, ScrollView, SafeAreaView, Modal, BackHandler, Animated, Easing } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Actions } from 'react-native-router-flux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -16,6 +16,7 @@ import {
   TourGuideZoneByPosition, // Component to use mask on overlay (ie, position absolute)
   useTourGuideController, // hook to start, etc.
 } from 'rn-tourguide';
+import * as Updates from "expo-updates";
 
 
 Notifications.setNotificationHandler({
@@ -87,6 +88,31 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
+const openPlayStore = () => {
+  return Alert.alert(
+    "APP UPDATE",
+    "App Update Available, Please Update Your Current Version: 1.0.4 to 1.0.5",
+    [{ text: "UPDATE", onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.hari.sankh_mandir') }],
+    { cancelable: false }
+  );
+};
+
+const updateversion = async () => {
+  try {
+    const update = await Updates.checkForUpdateAsync();
+    if (update.isAvailable) {
+      await Updates.fetchUpdateAsync();
+      // ... notify user of update ...
+      Updates.reloadFromCache();
+      await Updates.reloadAsync();
+      openPlayStore();
+    }
+    props.onFinish();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 
 const HomeScreen = () => {
   return (
@@ -107,6 +133,10 @@ const HomeScreenComPonent = () => {
     stop, // a function  to stopping it
     eventEmitter, // an object for listening some events
   } = useTourGuideController();
+
+  useEffect(() => {
+    updateversion();
+  }, []);
 
   useEffect(() => {
     (() => registerForPushNotificationsAsync())();
@@ -176,7 +206,6 @@ const HomeScreenComPonent = () => {
   }
 
 
-
   return (
 
     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -193,10 +222,15 @@ const HomeScreenComPonent = () => {
         <ScrollView >
 
           <View style={styles.card} >
-            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Karyakari: 12/05/2022 ( Tvndr )</Text>
-            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Mandal Varg: 12/05/2022 ( Tvndr )</Text>
-            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Mandal Baitakh: 12/05/2022 ( Tvndr )</Text>
-            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} /> Next Mandal Sankhikh: 12/05/2022 ( Tvndr )</Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Tvndr: 24/07/2022 <Animated.Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Animated.Text></Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Mazkr: 31/07/2022 <Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Text></Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Ermlk: 24/07/2022 <Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Text></Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Nanadu: 24/07/2022 <Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Text></Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Mepram: 31/07/2022 <Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Text></Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Umytk: 31/07/2022 <Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Text></Text>
+            <Text style={styles.cardTitle}><Image style={styles.cardFlag} source={require('../assets/flag.png')} />  Gurudhakhsina Vanvtk: 24/07/2022 <Text style={{ color: 'green', fontSize: 10, fontWeight: '700' }}> New</Text></Text>
+
+
           </View>
 
           <View style={styles.card1}>

@@ -8,6 +8,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import { getFirestore, collection, addDoc, doc, setDoc, updateDoc, getDocs, getDoc } from "firebase/firestore";
 import DropDownPicker from 'react-native-dropdown-picker';
 import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import { firebase } from '@react-native-firebase/auth';
 
 
 
@@ -24,7 +25,7 @@ const firebaseConfig = {
 try {
   initializeApp(firebaseConfig)
 } catch {
-  alert("Error Ocuured")
+  alert("Error Ocuured", "Please Restart Or Try Again Later..")
 }
 
 
@@ -100,6 +101,7 @@ const LoginScreen = () => {
 
   const verifyConfirmation = async () => {
     setLoading(true)
+    showMessage('')
     try {
       const credential = PhoneAuthProvider.credential(
         verificationId,
@@ -126,7 +128,8 @@ const LoginScreen = () => {
   }
 
   const verifyBloodGroup = async () => {
-    setLoading(true);
+    setLoading(true)
+    showMessage('')
     try {
       const DocSnap = await getDoc(doc(db, "Users", auth.currentUser.uid));
       if (DocSnap.exists()) {
@@ -167,7 +170,6 @@ const LoginScreen = () => {
 
 
     <ScrollView>
-
 
 
       <FirebaseRecaptchaVerifierModal

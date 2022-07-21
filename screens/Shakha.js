@@ -11,33 +11,33 @@ const Shakha = () => {
                     <Text style={styles.cardTitle}>Rss Shakha Updates <FontAwesome5Icon name="flag" size={25} /></Text>
                     <Text style={styles.cardText}>Namaste,New Ganageetham,Subhashitham And Amritavachanam Available. Upload Masa Vritham And Shakha Karyakari Details Here</Text>
                     <Text style={styles.cardSubTitle}>Add Shakha Masa Vritham And Karyakari Details</Text>
-                    <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Add Masa Vritham</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Add Masa Vritham <FontAwesome5Icon name="plus-circle" size={18} /></Text></TouchableOpacity>
                 </View>
 
                 <View style={styles.card2}>
                     <Text style={styles.cardTitle}>Shakha Baitaks And Rss Ulsav</Text>
                     <Text style={styles.cardText}>Shakha Ulsav Details, Shakha Karyakari, Upasthithdinam</Text>
                     <Text style={styles.cardSubTitle}>Details About Sankh Ulsavs And Shaka Karyakari, Baitaks And Upasthithdinam</Text>
-                    <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Karyakari</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Baitak</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Varg</Text></TouchableOpacity>
-                    <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Guru Dakshina</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.cardButton1} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Karyakari</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.cardButton1} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Baitak</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.cardButton1} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Varg</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.cardButton1} onPress={() => Alert.alert("Not Available", "Masa Vritham Can Be Available End Of This Month")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Guru Dakshina</Text></TouchableOpacity>
 
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.card1}>
                         <Text style={[styles.cardTitle, { color: 'black', margin: 10 }]}>Shakha Sharirikh Vishaya </Text>
-                        <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Yogasanam</Text></TouchableOpacity>
-                        <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Dhanda</Text></TouchableOpacity>
-                        <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Samatha</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.cardButton2} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Yogasanam</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.cardButton2} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Dhanda</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.cardButton2} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Samatha</Text></TouchableOpacity>
                     </View>
 
                     <View style={styles.card1}>
                         <Text style={[styles.cardTitle, { color: 'black', margin: 10 }]}>Shakha Bawdhikh Vishaya <FontAwesome5Icon name="book" size={15} /></Text>
-                        <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Ganageetham</Text></TouchableOpacity>
-                        <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Subhashitham</Text></TouchableOpacity>
-                        <TouchableOpacity style={styles.cardButton} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Amritavachanam</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.cardButton2} onPress={() => Actions.bawdhikh()}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Ganageetham</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.cardButton2} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Subhashitham</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.cardButton2} onPress={() => Alert.alert("Available Soon", "You Will Get A Notification When Available")}><Text style={{ textAlign: 'center', color: 'white', fontWeight: 'bold' }}>Amritavachanam</Text></TouchableOpacity>
                     </View>
                 </View>
 
@@ -113,7 +113,25 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     cardButton: {
+        backgroundColor: 'grey', /* rgba(255, 255, 255, 0.650) */
+        color: 'white',
+        margin: 8,
+        borderRadius: 8,
+        width: '50%',
+        padding: 7,
+        textAlign: 'center'
+    },
+    cardButton1: {
         backgroundColor: '#ffa200',
+        color: 'white',
+        margin: 8,
+        borderRadius: 8,
+        width: '50%',
+        padding: 7,
+        textAlign: 'center'
+    },
+    cardButton2: {
+        backgroundColor: 'grey',
         color: 'white',
         margin: 8,
         borderRadius: 8,

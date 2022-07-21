@@ -52,7 +52,7 @@ const BloodScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ height: "98%" }}>
+    <SafeAreaView style={{ height: "99.5%" }}>
       {loading && <ActivityIndicator size={80} style={styles.loader} color="orange" />}
       <View style={styles.container}>
         <Image style={styles.image1} source={require("../assets/bloodhand.png")} />
@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   title: {
-    color: "#fa5a5a",
-    fontSize: 18,
+    color: "rgba(255,30,0,.90)",
+    fontSize: 20,
     fontWeight: "600",
     margin: 6,
     textAlign: "center",

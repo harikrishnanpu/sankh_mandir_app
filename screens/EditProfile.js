@@ -43,6 +43,7 @@ const EditProfile = () => {
         setName(docSnap.data().name)
         setPhone(docSnap.data().phone)
         setUpPlace(docSnap.data().place)
+        setPlace(docSnap.data().place)
         setUpBlood(docSnap.data().blood)
         setBlood(docSnap.data().blood)
         setStatus(docSnap.data().status)
